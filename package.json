@@ -1,0 +1,16 @@
+{
+  "name": "traffic-graph",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Adrian Frith <adrian@adrianfrith.com>",
+  "license": "MIT",
+  "dependencies": {
+    "async": "^1.5.2",
+    "request": "^2.69.0",
+    "underscore": "^1.8.3"
+  }
+}
