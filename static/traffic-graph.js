@@ -48,8 +48,13 @@ d3.select(window).on('resize', resize);
 resize();
 
 function resize() {
-  width = parseInt(d3.select('#chart').style('width'), 10) - margin.left - margin.right;
-  height = parseInt(d3.select('#chart').style('height'), 10) - margin.top - margin.bottom;
+  var chart = d3.select('#chart');
+  width = parseInt(chart.style('width'), 10);
+  height = parseInt(chart.style('height'), 10);
+  height = Math.min(Math.round(width * 0.61803398875), height);
+  chart.select('svg').style('height', height + 'px');
+  width = width - margin.left - margin.right;
+  height = height - margin.top - margin.bottom;
 
   x.range([0, width]);
   y.range([height, 0]);
