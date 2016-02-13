@@ -63,6 +63,8 @@ function resize() {
 
   xAxis.ticks(width < 680 ? 5 : 10);
 
+  chart.select('#ylabel').attr('x', -Math.round(height/2));
+
   chart.select('clipPath rect').attr('width', width).attr('height', height);
 
   redraw();
