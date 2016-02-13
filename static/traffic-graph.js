@@ -57,6 +57,8 @@ function resize() {
   x.range([0, width]);
   y.range([height, 0]);
 
+  chart.select('clipPath rect').attr('width', width).attr('height', height);
+
   redraw();
 }
 
@@ -65,7 +67,10 @@ var data;
 function redraw() {
   if (!data) return;
 
-  x.domain(d3.extent(data, function (d) { return d.time; }));
+  var now = new Date();
+  var then = new Date(now.getTime() - 10800000);
+
+  x.domain([then, now]);
   y.domain([0, d3.max(data, function (d) {
     return d3.max([d.best_guess, d.pessimistic, d.optimistic]);
   })]).nice();
@@ -79,7 +84,7 @@ function redraw() {
   chart.select('.fill').datum(data).attr('d', fill);
 }
 
-d3.csv('lastdata/10800', handleRow, function (err, response) {
+d3.csv('lastdata/11400', handleRow, function (err, response) {
   data = response;
   redraw();
 });

@@ -10,12 +10,20 @@
     <div id="chart">
       <svg>
         <g>
-          <path class="fill" />
+          <defs>
+            <clipPath id="clip">
+              <rect x="0" y="0"/>
+            </clipPath>
+          </defs>
+
+          <path class="fill" clip-path="url(#clip)" />
+
           <g class="x axis"></g>
           <g class="y axis"></g>
-          <path class="line pessimistic" />
-          <path class="line optimistic" />
-          <path class="line best_guess" />
+
+          <path class="line pessimistic" clip-path="url(#clip)" />
+          <path class="line optimistic" clip-path="url(#clip)" />
+          <path class="line best_guess" clip-path="url(#clip)" />
         </g>
       </svg>
     </div>
