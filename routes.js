@@ -27,13 +27,14 @@ router.get('/lastdata/:seconds', function (req, res, next) {
   var then = new Date(now - req.params.seconds * 1000);
 
   res.type('csv');
+  res.write('time,best_guess,pessimistic,optimistic\n');
 
   db.get().collection('datapoints')
     .find({time: {$gt: then}}).sort({time: 1})
     .each(function(err, item) {
       if (err) return next(err);
       if (item != null) {
-        var data = [item.time.toISOString(), item.best_guess, item.pessimistic, item.optimistic];
+        var data = [item.time.getTime(), item.best_guess, item.pessimistic, item.optimistic];
         res.write(data.join(',') + '\n');
       } else {
         res.end();
