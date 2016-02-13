@@ -1,8 +1,9 @@
 var request = require('request'),
   querystring = require('querystring'),
   async = require('async'),
-  mongo = require('mongodb').MongoClient,
   _ = require('underscore');
+
+var db = require('./db');
 
 var interval = 2 * 60 * 1000; // 2 minutes
 
@@ -11,8 +12,6 @@ var api_key = process.env.API_KEY;
 
 var origin = process.env.ORIGIN || '50 Parliament Street, Cape Town';
 var destination = process.env.DESTINATION || '60 Klipper Road, Rondebosch, Cape Town';
-
-var mongourl = process.env.MONGO_URI || 'mongodb://localhost/traffic-graph';
 
 function requestFunction(traffic_model) {
   return function (cb) {
@@ -39,33 +38,32 @@ function requestFunction(traffic_model) {
   }
 }
 
-mongo.connect(mongourl, function (err, db) {
+function requestAndWrite () {
+  var time = new Date();
+  async.parallel({
+    best_guess: requestFunction('best_guess'),
+    pessimistic: requestFunction('pessimistic'),
+    optimistic: requestFunction('optimistic')
+  }, function (err, res) {
+    if (err) return console.log('Error getting times: ' + err);
+
+    res.time = time;
+    db.get().collection('datapoints').insert(res, function (err) {
+      if (err) {
+        console.log('Mongo insert error:', err);
+      }
+    })
+  });
+}
+
+db.connect(function (err, database) {
   if (err) {
     console.log('Mongo connect error:', err);
     return;
-  }
-
-  function requestAndWrite () {
-    var time = new Date();
-    async.parallel({
-      best_guess: requestFunction('best_guess'),
-      pessimistic: requestFunction('pessimistic'),
-      optimistic: requestFunction('optimistic')
-    }, function (err, res) {
-      if (err) return console.log('Error getting times: ' + err);
-
-      res.time = time;
-      db.collection('datapoints').insert(res, function (err) {
-        if (err) {
-          console.log('Mongo insert error:', err);
-        }
-      })
-    });
   }
 
   requestAndWrite();
   setInterval(function() {
     requestAndWrite();
   }, interval);
-
 });
