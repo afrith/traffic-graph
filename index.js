@@ -14,35 +14,35 @@ var destination = process.env.DESTINATION || '60 Klipper Road, Rondebosch, Cape 
 
 var mongourl = process.env.MONGO_URI || 'mongodb://localhost/traffic-graph';
 
+function requestFunction(traffic_model) {
+  return function (cb) {
+    var query = {
+      origin: origin,
+      destination: destination,
+      key: api_key,
+      mode: 'driving',
+      departure_time: 'now',
+      traffic_model: traffic_model
+    };
+
+    var url = url_base + querystring.stringify(query);
+
+    request(url, function (err, resp, body) {
+      if (err) return cb(err);
+      if (resp.statusCode != 200) return cb('Request failed, status code ' + resp.statusCode);
+
+      var data = JSON.parse(body);
+      if (data.status != 'OK') return cb('Request unsuccessful, status ' + data.status);
+
+      cb(null, data.routes[0].legs[0].duration_in_traffic.value);
+    });
+  }
+}
+
 mongo.connect(mongourl, function (err, db) {
   if (err) {
     console.log('Mongo connect error:', err);
     return;
-  }
-
-  function requestFunction(traffic_model) {
-    return function (cb) {
-      var query = {
-        origin: origin,
-        destination: destination,
-        key: api_key,
-        mode: 'driving',
-        departure_time: 'now',
-        traffic_model: traffic_model
-      };
-
-      var url = url_base + querystring.stringify(query);
-
-      request(url, function (err, resp, body) {
-        if (err) return cb(err);
-        if (resp.statusCode != 200) return cb('Request failed, status code ' + resp.statusCode);
-
-        var data = JSON.parse(body);
-        if (data.status != 'OK') return cb('Request unsuccessful, status ' + data.status);
-
-        cb(null, data.routes[0].legs[0].duration_in_traffic.value);
-      });
-    }
   }
 
   function requestAndWrite () {
