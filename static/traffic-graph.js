@@ -1,10 +1,16 @@
+var timeFormat = d3.time.format.multi([
+  [":%S", function(d) { return d.getSeconds(); }],
+  ["%H:%M", function(d) { return d.getHours(); }],
+  ["%e %b", function(d) { return true; }],
+]);
+
 var margin = {top: 10, right: 30, bottom: 30, left: 50};
 var width, height;
 
 var x = d3.time.scale();
 var y = d3.scale.linear();
 
-var xAxis = d3.svg.axis().scale(x).orient('bottom');
+var xAxis = d3.svg.axis().scale(x).orient('bottom').tickFormat(timeFormat);
 var yAxis = d3.svg.axis().scale(y).orient('left');
 
 function returnX (d) { return x(d.time); }
