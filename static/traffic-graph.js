@@ -1,5 +1,5 @@
 var margin = {top: 10, right: 30, bottom: 30, left: 50};
-var width = 200, height = 200; // placeholder
+var width, height;
 
 var x = d3.time.scale();
 var y = d3.scale.linear();
@@ -7,35 +7,38 @@ var y = d3.scale.linear();
 var xAxis = d3.svg.axis().scale(x).orient('bottom');
 var yAxis = d3.svg.axis().scale(y).orient('left');
 
-function accessorX (d) {
-  return x(d.time);
+function returnX (d) { return x(d.time); }
+function returnY(field) {
+  return function (d) {
+    return y(d[field]);
+  }
 }
 
 var bg_line = d3.svg.line()
-  .x(accessorX)
-  .y(function (d) { return y(d.best_guess); })
+  .x(returnX)
+  .y(returnY('best_guess'))
   .interpolate('basis');
 
 var pess_line = d3.svg.line()
-  .x(accessorX)
-  .y(function (d) { return y(d.pessimistic); })
+  .x(returnX)
+  .y(returnY('pessimistic'))
   .interpolate('basis');
 
 var opt_line = d3.svg.line()
-  .x(accessorX)
-  .y(function (d) { return y(d.optimistic); })
+  .x(returnX)
+  .y(returnY('optimistic'))
   .interpolate('basis');
 
 var fill = d3.svg.area()
-  .x(accessorX)
-  .y0(function (d) { return y(d.pessimistic); })
-  .y1(function (d) { return y(d.optimistic); })
+  .x(returnX)
+  .y0(returnY('pessimistic'))
+  .y1(returnY('optimistic'))
   .interpolate('basis');
 
 var svg = d3.select('#chart').append('svg')
     .style('width', '100%')
-    .style('height', '100%')
-  .append('g')
+    .style('height', '100%');
+var chart = svg.append('g')
     .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
 function handleRow (d) {
@@ -47,45 +50,48 @@ function handleRow (d) {
   };
 }
 
-d3.csv('lastdata/10800', handleRow, function (err, data) {
+chart.append('path').datum(data).attr('class', 'fill');
+
+chart.append('g').attr('class', 'x axis');
+chart.append('g').attr('class', 'y axis');
+
+chart.append('path').attr('class', 'line pessimistic');
+chart.append('path').attr('class', 'line optimistic');
+chart.append('path').attr('class', 'line best_guess');
+
+d3.select(window).on('resize', resize);
+resize();
+
+function resize() {
+  width = parseInt(d3.select('#chart').style('width'), 10) - margin.left - margin.right;
+  height = parseInt(d3.select('#chart').style('height'), 10) - margin.top - margin.bottom;
+
+  x.range([0, width]);
+  y.range([height, 0]);
+
+  redraw();
+}
+
+var data;
+
+function redraw() {
+  if (!data) return;
+
   x.domain(d3.extent(data, function (d) { return d.time; }));
   y.domain([0, d3.max(data, function (d) {
     return d3.max([d.best_guess, d.pessimistic, d.optimistic]);
   })]).nice();
 
-  svg.append('path').datum(data).attr('class', 'fill');
+  chart.select('.x.axis').attr('transform', 'translate(0,' + height + ')').call(xAxis);
+  chart.select('.y.axis').call(yAxis);
 
-  svg.append('g').attr('class', 'x axis');
-  svg.append('g').attr('class', 'y axis');
+  chart.select('.line.best_guess').datum(data).attr('d', bg_line);
+  chart.select('.line.pessimistic').datum(data).attr('d', pess_line);
+  chart.select('.line.optimistic').datum(data).attr('d', opt_line);
+  chart.select('.fill').datum(data).attr('d', fill);
+}
 
-  svg.append('path').datum(data).attr('class', 'line pessimistic');
-  svg.append('path').datum(data).attr('class', 'line optimistic');
-  svg.append('path').datum(data).attr('class', 'line best_guess');
-
-  d3.select(window).on('resize', resize);
-  resize();
-
-  function resize() {
-    width = parseInt(d3.select('#chart').style('width'), 10) - margin.left - margin.right;
-    height = parseInt(d3.select('#chart').style('height'), 10) - margin.top - margin.bottom;
-
-    x.range([0, width]);
-    y.range([height, 0]);
-
-    svg.select('.x.axis').attr('transform', 'translate(0,' + height + ')').call(xAxis);
-    svg.select('.y.axis').call(yAxis);
-    svg.select('.line.best_guess').attr('d', bg_line);
-    svg.select('.line.pessimistic').attr('d', pess_line);
-    svg.select('.line.optimistic').attr('d', opt_line);
-    svg.select('.fill').attr('d', fill);
-
-    redraw();
-  }
-
-  function redraw() {
-    svg.select('.line.best_guess').datum(data);
-    svg.select('.line.pessimistic').datum(data);
-    svg.select('.line.optimistic').datum(data);
-    svg.select('.fill').datum(data);
-  }
+d3.csv('lastdata/10800', handleRow, function (err, response) {
+  data = response;
+  redraw();
 });
