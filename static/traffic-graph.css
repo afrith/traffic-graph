@@ -1,0 +1,39 @@
+#chart {
+    position: absolute;
+    left: 0; right: 0;
+    top: 0; bottom: 0;
+}
+
+
+body {
+  font-family: sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+/*.x.axis path {
+  display: none;
+}*/
+
+.line {
+  fill: none;
+  stroke-width: 2px;
+}
+
+.line.best_guess {
+    stroke: blue;
+}
+
+.line.pessimistic, .line.optimistic {
+    stroke: darkgray;
+}
+
+.fill {
+    stroke: none;
+    fill: lightgray;
+}
