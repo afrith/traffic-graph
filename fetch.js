@@ -35,20 +35,19 @@ function requestFunction(traffic_model) {
   }
 }
 
-exports.fetchAndSave = function () {
+exports.fetchAndSave = function (cb) {
   var time = new Date();
   async.parallel({
     best_guess: requestFunction('best_guess'),
     pessimistic: requestFunction('pessimistic'),
     optimistic: requestFunction('optimistic')
   }, function (err, res) {
-    if (err) return console.log('Error getting times: ' + err);
+    if (err) return cb(err);
 
     res.time = time;
     db.get().collection('datapoints').insert(res, function (err) {
-      if (err) {
-        console.log('Mongo insert error:', err);
-      }
+      if (err) return cb(err);
+      cb(null, res);
     })
   });
 }

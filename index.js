@@ -1,4 +1,6 @@
-var express = require('express');
+var http = require('http'),
+  express = require('express'),
+  socketio = require('socket.io');
 
 var db = require('./db'),
   fetch = require('./fetch');
@@ -8,6 +10,9 @@ var interval = 2 * 60 * 1000; // 2 minutes
 var port = parseInt(process.env.PORT) || 3000;
 
 var app = express();
+var http_server = http.Server(app);
+var io = socketio(http_server);
+
 app.use(express.static('static'));
 app.use('/', require('./routes'));
 
@@ -19,10 +24,17 @@ db.connect(function (err, database) {
 
   //fetch.fetchAndSave();
   setInterval(function() {
-    fetch.fetchAndSave();
+    fetch.fetchAndSave(function (err, new_point) {
+      if (err) {
+        console.log('fetchAndSave error:', err);
+        return;
+      }
+      new_point.time = new_point.time.getTime();
+      io.emit('new_point', new_point);
+    });
   }, interval);
 
-  app.listen(port, function () {
+  http_server.listen(port, function () {
     console.log('Listening on port ' + port);
   });
 });

@@ -38,15 +38,6 @@ var fill = d3.svg.area()
 var chart = d3.select('#chart svg g')
     .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-function handleRow (d) {
-  return {
-    time: new Date(+d.time),
-    best_guess: +d.best_guess/60,
-    pessimistic: +d.pessimistic/60,
-    optimistic: +d.optimistic/60
-  };
-}
-
 d3.select(window).on('resize', resize);
 resize();
 
@@ -84,7 +75,23 @@ function redraw() {
   chart.select('.fill').datum(data).attr('d', fill);
 }
 
+function handleRow (d) {
+  return {
+    time: new Date(+d.time),
+    best_guess: +d.best_guess/60,
+    pessimistic: +d.pessimistic/60,
+    optimistic: +d.optimistic/60
+  };
+}
+
 d3.csv('lastdata/11400', handleRow, function (err, response) {
   data = response;
   redraw();
+
+  var socket = io();
+  socket.on('new_point', function(msg) {
+    var new_point = handleRow(msg);
+    data.push(new_point);
+    redraw();
+  });
 });
