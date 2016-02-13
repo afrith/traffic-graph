@@ -61,6 +61,8 @@ function resize() {
   x.range([0, width]);
   y.range([height, 0]);
 
+  xAxis.ticks(width < 680 ? 5 : 10);
+
   chart.select('clipPath rect').attr('width', width).attr('height', height);
 
   redraw();
