@@ -15,10 +15,6 @@ router.use(function (err, req, res, next) {
   }
 });
 
-router.get('/', function (req, res, next) {
-  res.send('Hello');
-});
-
 router.get('/lastdata/:seconds', function (req, res, next) {
   var seconds = parseInt(req.params.seconds);
 

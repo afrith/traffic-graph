@@ -8,6 +8,7 @@ var interval = 2 * 60 * 1000; // 2 minutes
 var port = parseInt(process.env.PORT) || 3000;
 
 var app = express();
+app.use(express.static('static'));
 app.use('/', require('./routes'));
 
 db.connect(function (err, database) {
