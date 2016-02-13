@@ -35,10 +35,7 @@ var fill = d3.svg.area()
   .y1(returnY('optimistic'))
   .interpolate('basis');
 
-var svg = d3.select('#chart').append('svg')
-    .style('width', '100%')
-    .style('height', '100%');
-var chart = svg.append('g')
+var chart = d3.select('#chart svg g')
     .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
 function handleRow (d) {
@@ -49,15 +46,6 @@ function handleRow (d) {
     optimistic: +d.optimistic/60
   };
 }
-
-chart.append('path').datum(data).attr('class', 'fill');
-
-chart.append('g').attr('class', 'x axis');
-chart.append('g').attr('class', 'y axis');
-
-chart.append('path').attr('class', 'line pessimistic');
-chart.append('path').attr('class', 'line optimistic');
-chart.append('path').attr('class', 'line best_guess');
 
 d3.select(window).on('resize', resize);
 resize();

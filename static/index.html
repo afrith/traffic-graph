@@ -7,7 +7,18 @@
   </head>
 
   <body>
-    <div id="chart"></div>
+    <div id="chart">
+      <svg>
+        <g>
+          <path class="fill" />
+          <g class="x axis"></g>
+          <g class="y axis"></g>
+          <path class="line pessimistic" />
+          <path class="line optimistic" />
+          <path class="line best_guess" />
+        </g>
+      </svg>
+    </div>
 
     <script src="//d3js.org/d3.v3.min.js"></script>
     <script src="traffic-graph.js"></script>
