@@ -106,7 +106,11 @@ function reloadData(secs, cb) {
   });
 }
 
-reloadData(10800, function () {
+document.getElementById('interval').onchange = function (event) {
+  reloadData(event.target.value);
+};
+
+reloadData(21600, function () {
   var socket = io();
   socket.on('new_point', function(msg) {
     var new_point = handleRow(msg);
