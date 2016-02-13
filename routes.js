@@ -3,6 +3,9 @@ var router = express.Router();
 
 var db = require('./db');
 
+var origin = process.env.ORIGIN || '50 Parliament Street, Cape Town';
+var destination = process.env.DESTINATION || '60 Klipper Road, Rondebosch, Cape Town';
+
 router.use(function (err, req, res, next) {
   if (err == 404) {
     res.status(404).send('Not Found');
@@ -13,6 +16,10 @@ router.use(function (err, req, res, next) {
   } else {
     res.status(500).json(err);
   }
+});
+
+router.get('/', function (req, res, next) {
+  res.render('index', { origin: origin, destination: destination });
 });
 
 router.get('/lastdata/:seconds', function (req, res, next) {

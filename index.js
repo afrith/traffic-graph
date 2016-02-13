@@ -1,5 +1,6 @@
 var http = require('http'),
   express = require('express'),
+  exphbs  = require('express-handlebars'),
   socketio = require('socket.io');
 
 var db = require('./db'),
@@ -14,6 +15,8 @@ var http_server = http.Server(app);
 var io = socketio(http_server);
 
 app.use(express.static('static'));
+app.engine('handlebars', exphbs());
+app.set('view engine', 'handlebars');
 app.use('/', require('./routes'));
 
 db.connect(function (err, database) {

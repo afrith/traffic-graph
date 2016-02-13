@@ -1,8 +1,10 @@
 var timeFormat = d3.time.format.multi([
   [":%S", function(d) { return d.getSeconds(); }],
-  ["%H:%M", function(d) { return d.getHours(); }],
+  ["%H:%M", function(d) { return d.getMinutes() || d.getHours(); }],
   ["%e %b", function(d) { return true; }],
 ]);
+
+var interval;
 
 var margin = {top: 10, right: 30, bottom: 30, left: 50};
 var width, height;
@@ -70,7 +72,7 @@ function redraw() {
   if (!data) return;
 
   var now = new Date();
-  var then = new Date(now.getTime() - 10800000);
+  var then = new Date(now.getTime() - (interval * 1000));
 
   x.domain([then, now]);
   y.domain([0, d3.max(data, function (d) {
@@ -95,10 +97,16 @@ function handleRow (d) {
   };
 }
 
-d3.csv('lastdata/11400', handleRow, function (err, response) {
-  data = response;
-  redraw();
+function reloadData(secs, cb) {
+  interval = secs;
+  d3.csv('lastdata/' + (secs + 300), handleRow, function (err, response) {
+    data = response;
+    redraw();
+    if (cb) cb();
+  });
+}
 
+reloadData(10800, function () {
   var socket = io();
   socket.on('new_point', function(msg) {
     var new_point = handleRow(msg);

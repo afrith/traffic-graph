@@ -1,15 +1,37 @@
-#chart {
-    position: absolute;
-    left: 0; right: 0;
+html, body {
+    height: 100%;
+}
+
+div#container {
+    position: fixed;
     top: 0; bottom: 0;
+    left: 0; right: 0;
+    display: flex;
+    flex-flow: column;
+    align-items: stretch;
+}
+
+#header {
+    flex: 0 1 auto;
+}
+
+div#placenames {
+    font-size: 120%;
+    text-align: center;
+}
+
+div#times {
+    text-align: center;
+}
+
+#chart {
+    flex: 1 1 auto;
+    overflow-y: hidden;
 }
 
 #chart svg {
     width: 100%;
-}
-
-body {
-  font-family: sans-serif;
+    max-height: 100%;
 }
 
 .axis path,
@@ -18,10 +40,6 @@ body {
   stroke: #000;
   shape-rendering: crispEdges;
 }
-
-/*.x.axis path {
-  display: none;
-}*/
 
 .line {
   fill: none;

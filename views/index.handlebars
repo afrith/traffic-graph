@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+
+    <title>Live Traffic Graph</title>
+
+    <link rel="stylesheet" href="traffic-graph.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" crossorigin="anonymous">
+
+  </head>
+
+  <body>
+    <div id="container">
+      <div id="header">
+        <div id="placenames">
+          Driving time from <em>{{origin}}</em> to <em>{{destination}}</em>
+        </div>
+        <div id="times">
+          For the past
+          <select>
+            <option value="86400">24 hours</option>
+            <option value="43200">12 hours</option>
+            <option value="21600">6 hours</option>
+            <option value="10800" selected>3 hours</option>
+            <option value="3600">hour</option>
+            <option value="1800">30 minutes</option>
+            <option value="900">15 minutes</option>
+          </select>
+          &ndash; Updated every two minutes
+        </div>
+      </div>
+      <div id="chart">
+        <svg>
+          <g>
+            <defs>
+              <clipPath id="clip">
+                <rect x="0" y="0"/>
+              </clipPath>
+            </defs>
+
+            <path class="fill" clip-path="url(#clip)" />
+
+            <g class="x axis"></g>
+            <g class="y axis">
+              <text id="ylabel" transform="rotate(-90)" y="-30" style="text-anchor:middle">Driving time (minutes)</text>
+            </g>
+
+            <path class="line pessimistic" clip-path="url(#clip)" />
+            <path class="line optimistic" clip-path="url(#clip)" />
+            <path class="line best_guess" clip-path="url(#clip)" />
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <script src="//d3js.org/d3.v3.min.js"></script>
+    <script src="socket.io/socket.io.js"></script>
+    <script src="traffic-graph.js"></script>
+  </body>
+</html>
