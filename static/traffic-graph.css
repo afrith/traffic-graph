@@ -37,30 +37,19 @@ div#times {
 .axis path,
 .axis line {
   fill: none;
-  stroke: #000;
+  stroke: #000000;
   shape-rendering: crispEdges;
 }
 
-.line {
-  fill: none;
-  stroke-width: 2px;
-}
-
 .line.best_guess {
-    stroke: blue;
-}
-
-.line.pessimistic, .line.optimistic {
-    stroke: darkgray;
-}
-
-text.pessimistic, text.optimistic {
-    fill: gray;
+    fill: none;
+    stroke-width: 2px;
+    stroke: #4169E1;
 }
 
 .fill {
     stroke: none;
-    fill: lightgray;
+    fill: #d3d3d3;
 }
 
 .overlay {
@@ -70,10 +59,14 @@ text.pessimistic, text.optimistic {
 
 .focus circle.best_guess {
   fill: none;
-  stroke: black;
+  stroke: #000000;
 }
 
-.focus circle.pessimistic, .focus circle.optimistic {
-  fill: none;
-  stroke: gray;
+.focus rect.pessimistic, .focus rect.optimistic {
+  stroke: none;
+  fill: #696969;
+}
+
+text.pessimistic, text.optimistic {
+    fill: #808080;
 }

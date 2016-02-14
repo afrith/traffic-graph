@@ -27,16 +27,6 @@ var bg_line = d3.svg.line()
   .y(returnY('best_guess'))
   .interpolate('basis');
 
-var pess_line = d3.svg.line()
-  .x(returnX)
-  .y(returnY('pessimistic'))
-  .interpolate('basis');
-
-var opt_line = d3.svg.line()
-  .x(returnX)
-  .y(returnY('optimistic'))
-  .interpolate('basis');
-
 var fill = d3.svg.area()
   .x(returnX)
   .y0(returnY('pessimistic'))
@@ -73,7 +63,7 @@ function mousemove () {
   focus.selectAll('.optimistic')
     .attr('transform', 'translate(0,' + y(d.optimistic) + ')');
   focus.select('text.time')
-    .attr('transform', 'translate(0,' + y(d.optimistic) + ')')
+    .attr('transform', 'translate(0,' + y(d.optimistic) + '),rotate(-90)')
     .text(hmFormat(d.time));
   focus.select('text.best_guess').text(durFormat(d.best_guess));
   focus.select('text.pessimistic').text(durFormat(d.pessimistic));
@@ -122,8 +112,6 @@ function redraw() {
   chart.select('.y.axis').call(yAxis);
 
   chart.select('.line.best_guess').datum(data).attr('d', bg_line);
-  chart.select('.line.pessimistic').datum(data).attr('d', pess_line);
-  chart.select('.line.optimistic').datum(data).attr('d', opt_line);
   chart.select('.fill').datum(data).attr('d', fill);
 }
 
