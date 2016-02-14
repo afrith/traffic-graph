@@ -49,12 +49,24 @@
 
             <g class="x axis"></g>
             <g class="y axis">
-              <text id="ylabel" transform="rotate(-90)" y="-30" style="text-anchor:middle">Driving time (minutes)</text>
+              <text id="ylabel" transform="rotate(-90)" y="-35" style="text-anchor:middle">Driving time (minutes)</text>
             </g>
 
             <path class="line pessimistic" clip-path="url(#clip)" />
             <path class="line optimistic" clip-path="url(#clip)" />
             <path class="line best_guess" clip-path="url(#clip)" />
+
+            <g class="focus" style="display: none">
+              <circle r="5" class="pessimistic" />
+              <circle r="5" class="optimistic" />
+              <circle r="5" class="best_guess" />
+              <text class="time" y="20" style="text-anchor:middle"></text>
+              <text class="pessimistic" x="10" style="text-anchor:left" dy="0.35em"></text>
+              <text class="optimistic" x="10" style="text-anchor:left" dy="0.35em"></text>
+              <text class="best_guess" x="10" style="text-anchor:left" dy="0.35em"></text>
+            </g>
+
+            <rect class="overlay" />
           </g>
         </svg>
       </div>

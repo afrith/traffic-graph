@@ -54,7 +54,26 @@ div#times {
     stroke: darkgray;
 }
 
+text.pessimistic, text.optimistic {
+    fill: gray;
+}
+
 .fill {
     stroke: none;
     fill: lightgray;
+}
+
+.overlay {
+  fill: none;
+  pointer-events: all;
+}
+
+.focus circle.best_guess {
+  fill: none;
+  stroke: black;
+}
+
+.focus circle.pessimistic, .focus circle.optimistic {
+  fill: none;
+  stroke: gray;
 }
