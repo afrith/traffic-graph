@@ -1,7 +1,7 @@
 traffic-graph
 =============
 
-This is (well, will eventually be) a service which regularly checks the [Google Directions API](https://developers.google.com/maps/documentation/directions/intro) for the driving duration (with traffic) between two addresses, and plots it on a live graph.
+This is a service which regularly checks the [Google Directions API](https://developers.google.com/maps/documentation/directions/intro) for the driving duration (with traffic) between two addresses, and plots it on a live graph.
 
 Deployment
 ----------
@@ -14,3 +14,5 @@ export ORIGIN="21 Wolfe Street, Wynberg, Cape Town"
 export DESTINATION="27 Mechau Street, Cape Town"
 export MONGO_URL=mongodb://localhost/traffic-graph
 ```
+
+If you deploy behind a reverse proxy, optimally the proxy should support WebSockets ([see here](http://nginx.org/en/docs/http/websocket.html) for instructions for nginx).
