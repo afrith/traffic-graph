@@ -24,14 +24,12 @@ function returnY(field) {
 
 var bg_line = d3.svg.line()
   .x(returnX)
-  .y(returnY('best_guess'))
-  .interpolate('basis');
+  .y(returnY('best_guess'));
 
 var fill = d3.svg.area()
   .x(returnX)
   .y0(returnY('pessimistic'))
-  .y1(returnY('optimistic'))
-  .interpolate('basis');
+  .y1(returnY('optimistic'));
 
 var chart = d3.select('#chart svg g')
     .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
